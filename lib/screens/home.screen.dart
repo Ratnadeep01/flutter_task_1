@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: GoogleFonts.inter(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
-                          color: const Color(0xFF08090A)),
+                          color: const Color(0xFF6D747A)),
                     ),
                     SizedBox(
                       height: 32.h,
