@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_task_1/widgets/learning_options.widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 import '../list.contents.dart';
 import '../widgets/events_cards.widget.dart';
@@ -37,13 +40,36 @@ List<BottomNavigationBarItem> _navItems = [
 ];
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var lessonData;
+  var programData;
+
+  Future<void> getLessonData() async {
+    final response = await http.get(
+        Uri.parse('https://632017e19f82827dcf24a655.mockapi.io/api/lessons'));
+    if (response.statusCode == 200) {
+      lessonData = jsonDecode(response.body.toString());
+    } else {
+      print('Cannot fetch your request');
+    }
+  }
+
+  Future<void> getProgramData() async {
+    final response = await http.get(
+        Uri.parse('https://632017e19f82827dcf24a655.mockapi.io/api/programs'));
+    if (response.statusCode == 200) {
+      programData = jsonDecode(response.body.toString());
+    } else {
+      print('Cannot fetch your request');
+    }
+  }
+
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -65,7 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              await getLessonData();
+              print(lessonData['items'][1]['name'].toString());
+            },
             child: SvgPicture.asset(
               'assets_svg/message_icon.svg',
               width: 24.w,
@@ -200,27 +229,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 24.h,
                   ),
-                  Container(
-                    height: 280.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 2,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ProgramCards(
-                          image: programImage[index],
-                          title: programTitle[index],
-                          footerText: programFootertext[index],
-                          subTitle: programSubtitle[index],
-                          children: [],
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          width: 16,
-                        );
-                      },
-                    ),
-                  ),
+                  FutureBuilder(
+                      future: getProgramData(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text('Loading');
+                        } else {
+                          return Container(
+                            height: 280.h,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: programData['items'].length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ProgramCards(
+                                  image: programImage[0],
+                                  title: programData['items'][index]
+                                      ['category'],
+                                  footerText: programData['items'][index]
+                                          ['lesson']
+                                      .toString(),
+                                  subTitle: programData['items'][index]['name'],
+                                  children: [],
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  width: 16,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                      }),
                   SizedBox(
                     height: 32.h,
                   ),
@@ -322,26 +364,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 24.h,
                   ),
-                  Container(
-                    height: 280.h,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 2,
-                      itemBuilder: (BuildContext context, int index) {
-                        return LessonCards(
-                          image: lessonImage[index],
-                          title: lessonTitle[index],
-                          footerText: lessonFootertext[index],
-                          subTitle: lessonSubtitle[index],
-                          children: [],
+                  FutureBuilder(
+                    future: getLessonData(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading');
+                      } else {
+                        return Container(
+                          height: 280.h,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: lessonData['items'].length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return LessonCards(
+                                image: lessonImage[0],
+                                title: lessonData['items'][index]['category'],
+                                footerText:
+                                    '${lessonData['items'][index]['duration']} min',
+                                subTitle: lessonData['items'][index]['name'],
+                                children: [],
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const SizedBox(
+                                width: 16,
+                              );
+                            },
+                          ),
                         );
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          width: 16,
-                        );
-                      },
-                    ),
+                      }
+                    },
                   ),
                 ],
               ),

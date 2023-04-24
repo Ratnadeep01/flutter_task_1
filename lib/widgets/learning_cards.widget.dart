@@ -57,6 +57,7 @@ class LearningCards extends StatelessWidget {
                   Text(
                     subTitle,
                     maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w700,
                       fontSize: 16.sp,
