@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_task_1/api.services.dart';
 import 'package:flutter_task_1/widgets/learning_options.widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 
 import '../list.contents.dart';
 import '../widgets/events_cards.widget.dart';
@@ -47,29 +45,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var lessonData;
-  var programData;
-
-  Future<void> getLessonData() async {
-    final response = await http.get(
-        Uri.parse('https://632017e19f82827dcf24a655.mockapi.io/api/lessons'));
-    if (response.statusCode == 200) {
-      lessonData = jsonDecode(response.body.toString());
-    } else {
-      print('Cannot fetch your request');
-    }
-  }
-
-  Future<void> getProgramData() async {
-    final response = await http.get(
-        Uri.parse('https://632017e19f82827dcf24a655.mockapi.io/api/programs'));
-    if (response.statusCode == 200) {
-      programData = jsonDecode(response.body.toString());
-    } else {
-      print('Cannot fetch your request');
-    }
-  }
-
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -91,10 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           InkWell(
-            onTap: () async {
-              await getLessonData();
-              print(lessonData['items'][1]['name'].toString());
-            },
+            onTap: () {},
             child: SvgPicture.asset(
               'assets_svg/message_icon.svg',
               width: 24.w,
@@ -230,12 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 24.h,
                   ),
                   FutureBuilder(
-                      future: getProgramData(),
+                      future: ApiServices().getProgramData(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Text('Loading');
                         } else {
+                          var programData = snapshot.data;
                           return Container(
                             height: 280.h,
                             child: ListView.separated(
@@ -365,11 +338,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 24.h,
                   ),
                   FutureBuilder(
-                    future: getLessonData(),
+                    future: ApiServices().getLessonData(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text('Loading');
                       } else {
+                        var lessonData = snapshot.data;
                         return Container(
                           height: 280.h,
                           child: ListView.separated(
