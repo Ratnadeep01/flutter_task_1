@@ -38,7 +38,7 @@ List<BottomNavigationBarItem> _navItems = [
 ];
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.sp,
-                                  color: Color(0xFF6D747A)),
+                                  color: const Color(0xFF6D747A)),
                             ),
                             SizedBox(
                               width: 8.w,
@@ -206,10 +206,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Text('Loading');
+                          return const Text('Loading');
                         } else {
+                          if (snapshot.hasError) {
+                            return const Text(
+                                'Check your internet Connection and try again');
+                          }
                           var programData = snapshot.data;
-                          return Container(
+                          return SizedBox(
                             height: 280.h,
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
@@ -223,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ['lesson']
                                       .toString(),
                                   subTitle: programData['items'][index]['name'],
-                                  children: [],
+                                  children: const [],
                                 );
                               },
                               separatorBuilder:
@@ -258,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.sp,
-                                  color: Color(0xFF6D747A)),
+                                  color: const Color(0xFF6D747A)),
                             ),
                             SizedBox(
                               width: 8.w,
@@ -276,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 24.h,
                   ),
-                  Container(
+                  SizedBox(
                     height: 280.h,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
@@ -287,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: eventsTitle[index],
                           footerText: eventsFootertext[index],
                           subTitle: eventsSubtitle[index],
-                          children: [],
+                          children: const [],
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
@@ -319,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.sp,
-                                  color: Color(0xFF6D747A)),
+                                  color: const Color(0xFF6D747A)),
                             ),
                             SizedBox(
                               width: 8.w,
@@ -341,10 +345,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     future: ApiServices().getLessonData(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Loading');
+                        return const Text('Loading');
                       } else {
+                        if (snapshot.hasError) {
+                          return const Text(
+                              'Check your internet Connection and try again');
+                        }
                         var lessonData = snapshot.data;
-                        return Container(
+                        return SizedBox(
                           height: 280.h,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
@@ -356,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 footerText:
                                     '${lessonData['items'][index]['duration']} min',
                                 subTitle: lessonData['items'][index]['name'],
-                                children: [],
+                                children: const [],
                               );
                             },
                             separatorBuilder:
@@ -389,8 +397,8 @@ class _HomeScreenState extends State<HomeScreen> {
               GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 10.sp),
           selectedLabelStyle:
               GoogleFonts.inter(fontSize: 10.sp, fontWeight: FontWeight.w600),
-          unselectedItemColor: Color(0xFF939CA3),
-          selectedItemColor: Color(0xFF598BED)),
+          unselectedItemColor: const Color(0xFF939CA3),
+          selectedItemColor: const Color(0xFF598BED)),
     );
   }
 }

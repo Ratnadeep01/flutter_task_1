@@ -19,7 +19,7 @@ class LearningCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Color(0xFFEBEDF0), width: 1),
+          border: Border.all(color: const Color(0xFFEBEDF0), width: 1),
           borderRadius: BorderRadius.circular(8),
         ),
         height: 280.h,

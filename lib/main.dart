@@ -21,7 +21,7 @@ class TaskApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return const MaterialApp(
           debugShowCheckedModeBanner: false,
           home: HomeScreen(),
         );

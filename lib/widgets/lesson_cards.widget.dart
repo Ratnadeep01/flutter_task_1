@@ -29,7 +29,7 @@ class LessonCards extends LearningCards {
               style: GoogleFonts.inter(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF6D747A)),
+                  color: const Color(0xFF6D747A)),
             ),
           ],
         ),

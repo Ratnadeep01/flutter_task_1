@@ -26,14 +26,14 @@ class EventsCards extends LearningCards {
           style: GoogleFonts.inter(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF6D747A)),
+              color: const Color(0xFF6D747A)),
         ),
         Container(
           height: 26.h,
           width: 62.w,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: Color(0xFF598BED))),
+              border: Border.all(color: const Color(0xFF598BED))),
           child: Center(
             child: Text(
               'Book',
